@@ -1,5 +1,4 @@
-import React from 'react';
-import { CiHeart } from "react-icons/ci";
+import React from "react";
 
 interface Blog {
   id: number;
@@ -8,7 +7,7 @@ interface Blog {
   text: string;
 }
 
-const Blogs: React.FC = () => {
+const Nature: React.FC = () => {
   const blogs: Blog[] = [
     {
       id: 1,
@@ -65,40 +64,40 @@ const Blogs: React.FC = () => {
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet",
     },
   ];
+
   return (
-    <div className="min-h-[150vh] overflow-hidden bg-gray-100 flex flex-col items-center justify-center px-4">
-      <h1 className="text-gray-900 text-5xl py-10 font-bold">Explore Other Blogs</h1>
-      <div 
-        className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 overflow-y-auto" 
-        style={{
-          maxHeight: "12 0vh",
-          scrollbarWidth: "none", 
-          msOverflowStyle: "none" 
-        }}>
-        <style>
-          {`
-            .grid::-webkit-scrollbar {
-              display: none;
-            }
-          `}
-        </style>
-        {blogs.map((blog) => (
-          <div key={blog.id} className="p-4 bg-white rounded-lg shadow-lg">
-            <span className="text-xs text-pink-600 font-bold p-2">Author</span>
-            <img src={blog.img} className="w-full h-[200px] object-cover rounded-t-lg" alt={blog.title} />
-            <h1 className="text-gray-400 p-2 text-lg font-semibold">{blog.title}</h1>
-            
-            <p className="text-black text-sm p-2 line-clamp-3 overflow-hidden text-ellipsis">
-              {blog.text}
-            </p>           
-            <div className="flex justify-between items-center p-2">
-              <CiHeart className="text-pink-600 text-3xl cursor-pointer" />
-              <button className="bg-pink-600 text-white font-bold text-xs px-4 py-2 rounded hover:bg-pink-700">Save</button>
-            </div>
+    <div style={{
+        scrollbarWidth:"none"
+    }} className="p-4 bg-none h-screen overflow-scroll grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {blogs.map((blog) => (
+        <div
+          className="p-5 bg-white rounded shadow-lg flex flex-col items-center m-3"
+          key={blog.id}
+        >
+          <h1 className="my-3 text-lg font-bold text-pink-600 text-center">
+            {blog.title}
+          </h1>
+          <img
+            className="w-full max-w-xs object-cover rounded my-4 h-60"
+            src={blog.img}
+            alt={blog.title}
+          />
+          <div className="w-full my-2 flex justify-between items-center">
+            <span className="text-white py-1 px-3 bg-pink-600 text-xs rounded">
+              Author: Francis
+            </span>
+            <span className="text-gray-500 text-sm">10:00pm</span>
           </div>
-        ))}
-      </div>
+          <p className="text-sm text-black text-center my-4 line-clamp-3">
+            {blog.text}
+          </p>
+          <button className="bg-gray-200 rounded text-sm my-1 py-2 px-4 hover:bg-gray-300">
+            Show More
+          </button>
+        </div>
+      ))}
     </div>
   );
 };
-export default Blogs;
+
+export default Nature;

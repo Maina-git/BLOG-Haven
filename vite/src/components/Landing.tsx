@@ -7,9 +7,7 @@ const Landing:React.FC = () => {
 
 <img src="/images/blog-2355684_1280.jpg" className="w-[700px] shadow-lg" alt="" />
 
-
-
-    </div>
+</div>
   )
 }
 

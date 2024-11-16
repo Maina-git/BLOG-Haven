@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Home from './pages/Home';
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Navbar from './components/Navbar';
+import Posts from './pages/Posts';
 
 
 const App:React.FC = () => {
@@ -22,6 +23,7 @@ return (
       <Navbar/>
       <Routes>
         <Route path="/"  element={<Home/>}/>
+       <Route path="/p" element={<Posts/>}/>
       </Routes>
     </Router>
 )
