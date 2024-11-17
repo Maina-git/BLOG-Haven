@@ -5,6 +5,9 @@ import Home from './pages/Home';
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Navbar from './components/Navbar';
 import Posts from './pages/Posts';
+import Sports from './pages/Sports';
+import Culture from './pages/Culture';
+
 
 
 const App:React.FC = () => {
@@ -24,6 +27,8 @@ return (
       <Routes>
         <Route path="/"  element={<Home/>}/>
        <Route path="/p" element={<Posts/>}/>
+       <Route path="/s" element={<Sports/>}/>
+       <Route path="/c" element={<Culture/>}/>
       </Routes>
     </Router>
 )

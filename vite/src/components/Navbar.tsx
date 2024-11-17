@@ -13,9 +13,13 @@ const Navbar:React.FC = () => {
 <div className="flex flex-row gap-10">
 <Link  className="text-xs text-pink-600 hover-bg-gray-400" to="/">Popular</Link>
 <Link  className="text-xs text-pink-600 hover-bg-gray-400" to="/p">Growth</Link>
+<Link  className="text-xs text-pink-600 hover-bg-gray-400" to="/s">Sports</Link>
 <Link  className="text-xs text-pink-600 hover-bg-gray-400" to="/c">Culture</Link>
 <Link  className="text-xs text-pink-600 hover-bg-gray-400" to="/p">Product</Link>
+</div>
 
+<div>
+  <button className="px-4 py-1 bg-pink-600 text-white outline-none rounded-[20px] text-xs">Create Post</button>
 </div>
 
 
