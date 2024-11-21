@@ -19,7 +19,7 @@ const Navbar:React.FC = () => {
 </div>
 
 <div>
-  <button className="px-4 py-1 bg-pink-600 text-white outline-none rounded-[20px] text-xs">Create Post</button>
+  <Link to="/ap"><button className="px-4 py-1 bg-pink-600 text-white outline-none rounded-[20px] text-xs">Create Post</button></Link>
 </div>
 
 

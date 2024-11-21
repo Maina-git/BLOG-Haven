@@ -7,12 +7,12 @@ import Navbar from './components/Navbar';
 import Posts from './pages/Posts';
 import Sports from './pages/Sports';
 import Culture from './pages/Culture';
-
+import Addpost from './pages/Addpost';
 
 
 const App:React.FC = () => {
 
-const [auth, setAuth]=useState<boolean>(false)
+const [auth, setAuth]=useState<boolean>(()=>{return localStorage.getItem("isAuth") === "true";})
 
 if(!auth){
   return (
@@ -29,6 +29,7 @@ return (
        <Route path="/p" element={<Posts/>}/>
        <Route path="/s" element={<Sports/>}/>
        <Route path="/c" element={<Culture/>}/>
+       <Route path="/ap" element={<Addpost/>}/>
       </Routes>
     </Router>
 )

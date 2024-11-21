@@ -1,5 +1,4 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
 import Blogs from '../components/Blogs'
 import Landing from '../components/Landing'
 
