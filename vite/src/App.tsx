@@ -1,38 +1,46 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
-import { useState } from 'react';
 import Home from './pages/Home';
-import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import Navbar from './components/Navbar';
 import Posts from './pages/Posts';
 import Sports from './pages/Sports';
 import Culture from './pages/Culture';
 import Addpost from './pages/Addpost';
+import { AuthProvider } from './context/useAuth';
+import { DatabaseProvider } from './context/useDatabase';
 
 
-const App:React.FC = () => {
+const App: React.FC = () => {
+  const [auth, setAuth] = useState<boolean>(() => {
+    return localStorage.getItem('isAuth') === 'true';
+  });
 
-const [auth, setAuth]=useState<boolean>(()=>{return localStorage.getItem("isAuth") === "true";})
+  if (!auth) {
+    return (
+      <AuthProvider>
+        <Login />
+      </AuthProvider>
+    );
+  }
 
-if(!auth){
   return (
-    <div>
-      <Login setAuth={setAuth}/>
-    </div>
-  )
-}
-return (
-    <Router>
-      <Navbar/>
-      <Routes>
-        <Route path="/"  element={<Home/>}/>
-       <Route path="/p" element={<Posts/>}/>
-       <Route path="/s" element={<Sports/>}/>
-       <Route path="/c" element={<Culture/>}/>
-       <Route path="/ap" element={<Addpost/>}/>
-      </Routes>
-    </Router>
-)
-}
-
+    <AuthProvider>
+      <DatabaseProvider>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/p" element={<Posts />} />
+            <Route path="/s" element={<Sports />} />
+            
+            <Route path="/c" element={<Culture />} />
+            <Route path="/ap" element={<Addpost />} />
+          </Routes>
+        </Router>
+      </DatabaseProvider>
+    </AuthProvider>
+  );
+};
 export default App;
+

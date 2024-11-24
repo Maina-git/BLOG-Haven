@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 interface Blog {
   id: number;
@@ -27,6 +27,7 @@ const CulturePost: React.FC = () => {
       title: "EXPLORE ADVENTURES",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet",
     },
+    
     {
       id: 4,
       img: "/images/blog-684748_1280.jpg",
@@ -45,24 +46,6 @@ const CulturePost: React.FC = () => {
       title: "EXPLORE ADVENTURES",
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet",
     },
-    {
-      id: 7,
-      img: "/images/blog-684748_1280.jpg",
-      title: "MY FAV FUNDAY",
-      text: "Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet",
-    },
-    {
-      id: 8,
-      img: "/images/blog-2355684_1280.jpg",
-      title: "ANOTHER FUN DAY",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor.",
-    },
-    {
-      id: 9,
-      img: "/images/blog-3813603_1280.jpg",
-      title: "EXPLORE ADVENTURES",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet",
-    },
   ];
 
   return (
@@ -70,18 +53,14 @@ const CulturePost: React.FC = () => {
         scrollbarWidth:"none"
     }} className="p-4 bg-none h-screen overflow-scroll grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {blogs.map((blog) => (
-        <div
-          className="p-5 bg-white rounded shadow-lg flex flex-col items-center m-3"
-          key={blog.id}
-        >
+        <div className="p-5 bg-white rounded shadow-lg flex flex-col items-center m-3"
+          key={blog.id}>
           <h1 className="my-3 text-lg font-bold text-pink-600 text-center">
             {blog.title}
           </h1>
-          <img
-            className="w-full max-w-xs object-cover rounded my-4 h-60"
+          <img className="w-full max-w-xs object-cover rounded my-4 h-60"
             src={blog.img}
-            alt={blog.title}
-          />
+            alt={blog.title}/>
           <div className="w-full my-2 flex justify-between items-center">
             <span className="text-white py-1 px-3 bg-pink-600 text-xs rounded">
               Author: Francis
