@@ -43,8 +43,15 @@ const SportsPost: React.FC = () => {
     fetchSportsBlogs();
   }, []);
 
-  if (loading) return <div>Loading Culture Blogs...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="w-full h-[80vh] flex  items-center justify-center">
+  <div>
+  <h1 className="text-pink-600 font-bold text-4xl">Loading...</h1>
+  </div>
+</div>;
+if (error) return <div>Error404: {error}</div>;
+
+
+
 
   return (
     <div className="p-10">
