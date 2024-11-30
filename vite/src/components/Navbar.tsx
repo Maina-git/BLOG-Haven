@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
           Culture
         </Link>
         <Link className="text-xs text-pink-600 hover:text-pink-800" to="/p">
-          Product
+          IT & Tech
         </Link>
       </div>
 
@@ -86,7 +86,7 @@ const Navbar: React.FC = () => {
             className="text-sm py-5 hover:text-gray-200"
             to="/p"
             onClick={toggleSideBar}>
-            Product
+            IT & Tech
           </Link>
           <Link
             to="/ap"

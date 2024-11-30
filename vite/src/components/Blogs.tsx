@@ -3,14 +3,12 @@ import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../config/Firebase";
 
-
 interface Blog {
   id: string;
   title: string;
   text: string;
   category: string;
 }
-
 const Blogs: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -29,7 +27,6 @@ const Blogs: React.FC = () => {
           id: doc.id,
           ...doc.data(),
         })) as Blog[];
-
         setBlogs(allBlogs);
       } catch (err) {
         console.error("Error fetching culture blogs:", err);
@@ -59,13 +56,10 @@ const Blogs: React.FC = () => {
         {blogs.map((blog) => (
           <div
             key={blog.id}
-            className="p-4 border rounded shadow-lg flex flex-col items-center justify-center"
-          >
-            <img
-              src="/images/blog-2355684_1280.jpg"
+            className="p-4 border rounded shadow-lg flex flex-col items-center justify-center">
+            <img src="/images/blog-2355684_1280.jpg"
               alt={blog.title}
-              className="w-full h-40 object-cover rounded mb-3"
-            />
+              className="w-full h-40 object-cover rounded mb-3"/>
             <h2 className="text-2xl font-semibold text-pink-600">{blog.title}</h2>
             <p className="text-gray-500 text-xs mt-2 line-clamp-3">{blog.text}</p>
           </div>
@@ -74,6 +68,10 @@ const Blogs: React.FC = () => {
     </div>
   );
 };
-
 export default Blogs;
+
+
+
+
+
 
