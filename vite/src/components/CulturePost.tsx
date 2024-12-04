@@ -5,11 +5,13 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { imageInterface } from "../interface/CultureInterface";
 
 interface Blog {
+  author: string;
   id: string;
   title: string;
   text: string;
   category: string;
-  image: string; 
+  image: string;
+  createdAt: string; 
 }
 
 const CulturePost: React.FC = () => {
@@ -40,10 +42,12 @@ const CulturePost: React.FC = () => {
 
         const cultureBlogs: Blog[] = querySnapshot.docs.map((doc) => {
           const randomIndex = Math.floor(Math.random() * imageInterface.length);
+          const data = doc.data();
           return {
             id: doc.id,
-            ...doc.data(),
-            image: imageInterface[randomIndex].img, 
+            ...data,
+            createdAt: data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString() : "Unknown", 
+            image: imageInterface[randomIndex].img,
           };
         }) as Blog[];
         setBlogs(cultureBlogs);
@@ -75,24 +79,25 @@ const CulturePost: React.FC = () => {
           <div key={blog.id}
             className="p-4 border rounded shadow-lg flex flex-col items-center justify-center">
             <img src={blog.image}
-              className="w-full h-40 object-cover rounded mb-3"/>
+              className="w-full h-40 object-cover rounded mb-3"
+              alt={blog.title}/>
             <h2 className="text-2xl font-semibold text-pink-600 overflow-hidden text-ellipsis"
-            style={{
-             display: "-webkit-box",
-             WebkitBoxOrient: "vertical",
-             WebkitLineClamp: 1,
-             maxHeight: "4.5em",
-           }}
-            >{blog.title}</h2>
-            <p
-            className="text-gray-500 text-xs mt-2 overflow-hidden text-ellipsis"
-            style={{
-             display: "-webkit-box",
-             WebkitBoxOrient: "vertical",
-             WebkitLineClamp: 3,
-             maxHeight: "4.5em",
-           }}
-            >{blog.text}</p>
+              style={{
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: 1,
+                maxHeight: "4.5em",
+              }}>
+              {blog.title}
+            </h2>
+            <p className="text-gray-500 text-xs mt-2 overflow-hidden text-ellipsis"
+                style={{
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: 3,
+                maxHeight: "4.5em",}}>
+              {blog.text}
+            </p>
             <button
               onClick={() => openModal(blog)}
               className="bg-gray-300 text-black px-5 py-2 text-xs my-2 rounded hover:bg-gray-400">
@@ -113,11 +118,14 @@ const CulturePost: React.FC = () => {
             <img src={selectedBlog.image}
               alt={selectedBlog.title}
               className="w-full h-48 object-cover rounded mb-4"/>
-            <p className="text-gray-700 text-sm">{selectedBlog.text}</p>
+            <p className="text-gray-700 text-sm mb-4">{selectedBlog.text}</p>
+            <p className="text-pink-600 text-xs mb-2">
+              Created at: {selectedBlog.createdAt}
+            </p>
             <div className="flex justify-between mt-4">
               <div className="w-1/2 p-auto flex justify-between">
                 <span className="text-xs py-2 px-5 bg-pink-600 text-white rounded">
-                  Francis
+                  {selectedBlog.author}
                 </span>
                 <span className="p-auto cursor-pointer">
                   <IoIosHeartEmpty className="text-pink-600 text-3xl" />

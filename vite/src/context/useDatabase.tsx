@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from "react";
 import { db } from "../config/Firebase";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, where} from "firebase/firestore";
 
 
 interface DatabaseContextProps {
@@ -22,7 +22,7 @@ export const DatabaseProvider: React.FC = ({ children }) => {
         title,
         text,
         category,
-        createdAt: new Date(),
+        createdAt:new Date()
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {

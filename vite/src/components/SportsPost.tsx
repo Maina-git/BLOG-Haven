@@ -11,6 +11,7 @@ interface Blog {
   text: string;
   category: string;
   image:string;
+  createdAt:string;
 }
 
 const SportsPost: React.FC = () => {
@@ -31,21 +32,24 @@ const SportsPost: React.FC = () => {
   };
 
 
-  useEffect(() => {
-    const fetchSportsBlogs = async () => {
+useEffect(() => {
+  const fetchSportsBlogs = async () => {
       setLoading(true);
       setError(null);
       try {
         const blogsCollection = collection(db, "blogs");
         const q = query(blogsCollection, where("category", "==", "Sports"));
-        const querySnapshot = await getDocs(q);
-
+        const querySnapshot = await getDocs(q);        
+        
         const sportsBlogs: Blog[] = querySnapshot.docs.map((doc) => {
           const randomIndex=Math.floor(Math.random()* sportsInterface.length);
+          const data=doc.data();
           return {
           id: doc.id,
           ...doc.data(),
+          createdAt: data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString() : "Unknown", 
           image:sportsInterface[randomIndex].img,
+      
           }
         }) as Blog[];
         setBlogs(sportsBlogs);
@@ -78,8 +82,7 @@ if (error) return <div>Error404: {error}</div>;
               WebkitBoxOrient: "vertical",
               WebkitLineClamp: 1,
               maxHeight: "4.5em",
-            }}
-            >{blog.title}</h2>
+            }}>{blog.title}</h2>
             <p  className="text-gray-500 text-xs mt-2 overflow-hidden text-ellipsis"
                  style={{
                   display: "-webkit-box",
@@ -103,7 +106,8 @@ if (error) return <div>Error404: {error}</div>;
             <img src={selectedBlog.image}
               alt={selectedBlog.title}
               className="w-full h-48 object-cover rounded mb-4"/>
-            <p className="text-gray-700 text-sm">{selectedBlog.text}</p>
+            <p className="text-gray-700 text-sm mb-4">{selectedBlog.text}</p>
+            <p className="text-pink-600 text-xs mb-2">CreatedAt at:{selectedBlog.createdAt}</p>
             <div className="flex justify-between mt-4">
               <div className="w-1/2 p-auto flex justify-between">
                 <span className="text-xs py-2 px-5 bg-pink-600 text-white rounded">
