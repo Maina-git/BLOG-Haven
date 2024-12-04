@@ -46,7 +46,6 @@ const CulturePost: React.FC = () => {
             image: imageInterface[randomIndex].img, 
           };
         }) as Blog[];
-
         setBlogs(cultureBlogs);
       } catch (err) {
         console.error("Error fetching culture blogs:", err);
@@ -69,19 +68,31 @@ const CulturePost: React.FC = () => {
     );
 
   if (error) return <div>Error404: {error}</div>;
-
   return (
     <div className="p-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {blogs.map((blog) => (
           <div key={blog.id}
             className="p-4 border rounded shadow-lg flex flex-col items-center justify-center">
-            <img
-              src={blog.image}
-              alt={blog.title}
+            <img src={blog.image}
               className="w-full h-40 object-cover rounded mb-3"/>
-            <h2 className="text-2xl font-semibold text-pink-600">{blog.title}</h2>
-            <p className="text-gray-500 text-xs mt-2 line-clamp-3">{blog.text}</p>
+            <h2 className="text-2xl font-semibold text-pink-600 overflow-hidden text-ellipsis"
+            style={{
+             display: "-webkit-box",
+             WebkitBoxOrient: "vertical",
+             WebkitLineClamp: 1,
+             maxHeight: "4.5em",
+           }}
+            >{blog.title}</h2>
+            <p
+            className="text-gray-500 text-xs mt-2 overflow-hidden text-ellipsis"
+            style={{
+             display: "-webkit-box",
+             WebkitBoxOrient: "vertical",
+             WebkitLineClamp: 3,
+             maxHeight: "4.5em",
+           }}
+            >{blog.text}</p>
             <button
               onClick={() => openModal(blog)}
               className="bg-gray-300 text-black px-5 py-2 text-xs my-2 rounded hover:bg-gray-400">
@@ -90,15 +101,12 @@ const CulturePost: React.FC = () => {
           </div>
         ))}
       </div>
-
       {isModalOpen && selectedBlog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white rounded-lg p-6 w-11/12 sm:w-2/3 lg:w-1/2 shadow-lg relative">
             <button
               className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
-              onClick={closeModal}>
-              ✖
-            </button>
+              onClick={closeModal}>✖</button>
             <h2 className="text-2xl font-bold text-pink-600 mb-4">
               {selectedBlog.title}
             </h2>
@@ -127,7 +135,6 @@ const CulturePost: React.FC = () => {
     </div>
   );
 };
-
 export default CulturePost;
 
 

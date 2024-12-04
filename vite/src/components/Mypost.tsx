@@ -3,21 +3,24 @@ import React, { useState } from "react";
 import { useDatabase } from "../context/useDatabase";
 
 const Mypost: React.FC = () => {
+  const [author, setAuthor]=useState("");
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [category, setCategory] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+ 
 
   const { addBlog } = useDatabase();
 
   const handleAddPost = async () => {
-    if (!title || !text || !category) {
+    if (!author || !title || !text || !category) {
       setError("Please fill out all fields and select a category.");
       return;
     }
 
     try {
-      await addBlog(title, text, category);
+      await addBlog(author, title, text, category);
+      setAuthor("");
       setTitle("");
       setText("");
       setCategory("");
@@ -61,6 +64,11 @@ const Mypost: React.FC = () => {
             </span>
           ))}
         </div>
+        <input type="text"
+          placeholder="Author"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          className="p-2 w-full border rounded-md outline-none text-xs md:text-2xl focus:ring-2 focus:ring-blue-400"/>
 
         <input type="text"
           placeholder="Blog Title Goes Here"

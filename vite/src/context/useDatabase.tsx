@@ -4,7 +4,7 @@ import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 
 
 interface DatabaseContextProps {
-  addBlog: (title: string, text: string, category: string) => Promise<void>;
+  addBlog: (author:string, title: string, text: string, category: string) => Promise<void>;
   getBlogsByCategory: (category: string) => Promise<any[]>;
 }
 
@@ -15,9 +15,10 @@ const DatabaseContext = createContext<DatabaseContextProps | undefined>(
 
 
 export const DatabaseProvider: React.FC = ({ children }) => {
-  const addBlog = async (title: string, text: string, category: string) => {
+  const addBlog = async (author:string, title: string, text: string, category: string) => {
     try {
       const docRef = await addDoc(collection(db, "blogs"), {
+        author,
         title,
         text,
         category,
@@ -45,7 +46,6 @@ export const DatabaseProvider: React.FC = ({ children }) => {
       return [];
     }
   };
-
   return (
     <DatabaseContext.Provider value={{ addBlog, getBlogsByCategory }}>
       {children}

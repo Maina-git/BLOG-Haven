@@ -19,7 +19,16 @@ export const  imageInterface=[
     },
     {
       id:5,
-    img:"vite/public/images/culture/woman-1692849_1280.jpg"
+    img:"/images/culture/woman-1692849_1280.jpg"
     },
     ];
+    
+
+
+
+
+
+
+
+
     
