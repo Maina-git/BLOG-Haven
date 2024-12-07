@@ -5,10 +5,22 @@ export const  blogInterface=[
 },
 {
     id:2,
-    img:"/images/blog-2355684_1280.jpg"
+    img:"/images/notepad-3297994_1280.jpg"
+},
+
+{id:4,
+    img:"/images/computer-4484282_1280 (1).jpg"
 },
 {
-    id:3,
-    img:"/images/blog-3813603_1280.jpg "
+    id:5,
+    img:"/images/diary-968592_1280.jpg"
+},
+{
+   id:6,
+   img:"/images/laptop-4906312_1280.jpg" 
+},
+{
+  id:7,
+  img:"/images/news-4025602_1280.jpg"
 }
 ];

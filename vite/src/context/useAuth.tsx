@@ -1,6 +1,7 @@
 import React, { createContext, useState, ReactNode, FC } from "react";
 import { auth } from "../config/Firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signOut } from "firebase/auth";
 
 
 interface AuthContextType {
@@ -13,10 +14,10 @@ interface AuthContextType {
   setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
   toggleShowPassword: () => void;
   login: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+  logMeOut:React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -48,7 +49,10 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       alert(`Error: ${(error as Error).message}`);
     }
   };
-
+const logMeOut=async()=>{
+  await signOut(auth);
+  localStorage.clear();
+}
   return (
     <AuthContext.Provider
       value={{
@@ -61,8 +65,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
         setConfirmPassword,
         toggleShowPassword,
         login,
-      }}
-    >
+        logMeOut,
+      }}>
       {children}
     </AuthContext.Provider>
   );
@@ -74,3 +78,6 @@ export const useAuth = () => {
   }
   return context;
 };
+
+
+

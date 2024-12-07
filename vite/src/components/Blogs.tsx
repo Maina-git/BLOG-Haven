@@ -20,9 +20,16 @@ const Blogs: React.FC = () => {
     const fetchBlogs = async () => {
       setLoading(true);
       setError(null);
+
+      const timeout = setTimeout(() => {
+        setError("Request timeout. Please try again later.");
+        setLoading(false);
+      }, 10000);
+
       try {
         const blogsCollection = collection(db, "blogs");
         const querySnapshot = await getDocs(blogsCollection);
+        clearTimeout(timeout);
         const allBlogs: Blog[] = querySnapshot.docs.map((doc) => {
         const randomIndex=Math.floor(Math.random()*blogInterface.length);
         return {
@@ -49,8 +56,17 @@ const Blogs: React.FC = () => {
         </div>
       </div>
     );
-  if (error) return <div>Error404: {error}</div>;
-  return (
+  
+    if (error)
+      return (
+        <div className="w-full h-screen flex flex-col items-center justify-center">
+          <h1 className="text-black text-6xl">Error 404!</h1>
+          <p className="text-black text-xs">Site cannot be reached</p>
+        </div>
+      );
+
+
+return (
     <div className="p-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {blogs.map((blog) => (

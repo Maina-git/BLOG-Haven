@@ -9,6 +9,8 @@ import Culture from './pages/Culture';
 import Addpost from './pages/Addpost';
 import { AuthProvider } from './context/useAuth';
 import { DatabaseProvider } from './context/useDatabase';
+import IT from './pages/IT';
+import SignIn from './pages/SignIn';
 
 
 const App: React.FC = () => {
@@ -19,7 +21,7 @@ const App: React.FC = () => {
   if (!auth) {
     return (
       <AuthProvider>
-        <Login />
+        <Login/>
       </AuthProvider>
     );
   }
@@ -33,8 +35,9 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/p" element={<Posts />} />
             <Route path="/s" element={<Sports />} />
-            
             <Route path="/c" element={<Culture />} />
+            <Route path="/sn" element={<SignIn/>}/>
+            <Route path="/it" element={<IT/>}/>
             <Route path="/ap" element={<Addpost />} />
           </Routes>
         </Router>
