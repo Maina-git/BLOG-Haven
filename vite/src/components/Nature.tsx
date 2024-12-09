@@ -4,7 +4,9 @@ import { collection, query, where, getDocs, updateDoc } from "firebase/firestore
 import { db } from "../config/Firebase";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { growthInterface } from "../interface/GrowthInterface";
+import { FcLike } from "react-icons/fc";
 import { doc } from "firebase/firestore/lite";
+import { MdDelete } from "react-icons/md";
 
 interface Blog {
   author: string;
@@ -36,7 +38,6 @@ const Nature: React.FC = () => {
   };
 
   const handleLike = async (id: string, likes: number, likedByMe: boolean) => {
-    // Ensure likes is a valid number
     const currentLikes = Number(likes) || 0;
 
     const updatedBlogs = blogs.map((blog) =>
@@ -81,12 +82,12 @@ const Nature: React.FC = () => {
           return {
             id: doc.id,
             ...data,
+            likes: Number(data.likes) || 0,
             createdAt: data.createdAt
               ? new Date(data.createdAt.seconds * 1000).toLocaleString()
               : "Unknown",
             image: growthInterface[randomIndex].img,
-            likes: data.likes || 0, // Default to 0 if undefined
-            likedByMe: false, // Default to not liked
+            likedByMe: false, 
           };
         }) as Blog[];
         setBlogs(cultureBlogs);
@@ -124,8 +125,7 @@ const Nature: React.FC = () => {
         {blogs.map((blog) => (
           <div
             key={blog.id}
-            className="p-4 border rounded shadow-lg flex flex-col items-center justify-center"
-          >
+            className="p-4 border rounded shadow-lg flex flex-col items-center justify-center">
             <img src={blog.image} alt={blog.title} />
             <h2
               className="text-2xl font-semibold text-pink-600 overflow-hidden text-ellipsis"
@@ -134,25 +134,21 @@ const Nature: React.FC = () => {
                 WebkitBoxOrient: "vertical",
                 WebkitLineClamp: 1,
                 maxHeight: "4.5em",
-              }}
-            >
+              }}>
               {blog.title}
             </h2>
-            <p
-              className="text-gray-500 text-xs mt-2 overflow-hidden text-ellipsis"
+            <p className="text-gray-500 text-xs mt-2 overflow-hidden text-ellipsis"
               style={{
                 display: "-webkit-box",
                 WebkitBoxOrient: "vertical",
                 WebkitLineClamp: 3,
                 maxHeight: "4.5em",
-              }}
-            >
+              }}>
               {blog.text}
             </p>
             <button
               onClick={() => openModal(blog)}
-              className="bg-gray-300 text-black px-5 py-2 text-xs my-2 rounded hover:bg-gray-400"
-            >
+              className="bg-gray-300 text-black px-5 py-2 text-xs my-2 rounded hover:bg-gray-400">
               Show More
             </button>
           </div>
@@ -163,8 +159,7 @@ const Nature: React.FC = () => {
           <div className="bg-white overflow-y-auto rounded-lg p-6 w-11/12 sm:w-2/3 lg:w-1/2 shadow-lg relative">
             <button
               className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
-              onClick={closeModal}
-            >
+              onClick={closeModal}>
               ✖
             </button>
             <h2 className="text-2xl font-bold text-pink-600 mb-4">
@@ -173,8 +168,7 @@ const Nature: React.FC = () => {
             <img
               src={selectedBlog.image}
               alt={selectedBlog.title}
-              className="w-full h-48 object-cover rounded mb-4"
-            />
+              className="w-full h-48 object-cover rounded mb-4"/>
             <p className="text-gray-700 text-sm mb-4">{selectedBlog.text}</p>
             <p className="text-pink-600 text-xs mb-2">
               Created at: {selectedBlog.createdAt}
@@ -193,25 +187,31 @@ const Nature: React.FC = () => {
                         selectedBlog.likedByMe
                       )
                     }
-                    className="cursor-pointer"
-                  >
-                    <IoIosHeartEmpty
-                      className={`text-3xl ${
-                        selectedBlog.likedByMe
-                          ? "text-red-600"
-                          : "text-pink-600"
-                      }`}
-                    />
+                    className="cursor-pointer">
+               {selectedBlog.likedByMe ? <FcLike/> : <IoIosHeartEmpty/>}
                   </span>
                   <span className="text-sm text-gray-600">
                     {selectedBlog.likes} likes
                   </span>
+
+
+
+
+
+                  <span>
+                    <MdDelete/>
+                  </span>
+
+
+
+
+
+                  
                 </div>
               </div>
               <button
                 onClick={closeModal}
-                className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
-              >
+                className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
                 Close
               </button>
             </div>
@@ -221,5 +221,4 @@ const Nature: React.FC = () => {
     </div>
   );
 };
-
 export default Nature;

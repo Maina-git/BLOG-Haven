@@ -1,28 +1,24 @@
 import React, { createContext, useContext } from "react";
 import { db } from "../config/Firebase";
-import { collection, addDoc, getDocs, query, where} from "firebase/firestore";
-
+import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from "firebase/firestore";
 
 interface DatabaseContextProps {
-  addBlog: (author:string, title: string, text: string, category: string) => Promise<void>;
+  addBlog: (author: string, title: string, text: string, category: string) => Promise<void>;
   getBlogsByCategory: (category: string) => Promise<any[]>;
+  deleteBlog: (blogId: string) => Promise<void>;
 }
 
-
-const DatabaseContext = createContext<DatabaseContextProps | undefined>(
-  undefined
-);
-
+const DatabaseContext = createContext<DatabaseContextProps | undefined>(undefined);
 
 export const DatabaseProvider: React.FC = ({ children }) => {
-  const addBlog = async (author:string, title: string, text: string, category: string) => {
+  const addBlog = async (author: string, title: string, text: string, category: string) => {
     try {
       const docRef = await addDoc(collection(db, "blogs"), {
         author,
         title,
         text,
         category,
-        createdAt:new Date()
+        createdAt: new Date(),
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -46,13 +42,23 @@ export const DatabaseProvider: React.FC = ({ children }) => {
       return [];
     }
   };
+
+  const deleteBlog = async (blogId: string) => {
+    try {
+      const blogDoc = doc(db, "blogs", blogId);
+      await deleteDoc(blogDoc);
+      console.log("Document deleted with ID: ", blogId);
+    } catch (e) {
+      console.error("Error deleting document: ", e);
+    }
+  };
+
   return (
-    <DatabaseContext.Provider value={{ addBlog, getBlogsByCategory }}>
+    <DatabaseContext.Provider value={{ addBlog, getBlogsByCategory, deleteBlog }}>
       {children}
     </DatabaseContext.Provider>
   );
 };
-
 
 export const useDatabase = () => {
   const context = useContext(DatabaseContext);
@@ -61,5 +67,4 @@ export const useDatabase = () => {
   }
   return context;
 };
-
 

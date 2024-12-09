@@ -20,14 +20,14 @@ const App: React.FC = () => {
 
   if (!auth) {
     return (
-      <AuthProvider>
+      <AuthProvider setAuth={setAuth}>
         <Login/>
       </AuthProvider>
     );
   }
 
   return (
-    <AuthProvider>
+    <AuthProvider setAuth={setAuth}>
       <DatabaseProvider>
         <Router>
           <Navbar />

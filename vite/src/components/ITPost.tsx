@@ -3,6 +3,7 @@ import { collection, query, where, getDocs, updateDoc } from "firebase/firestore
 import { db } from "../config/Firebase";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { ItInterface } from "../interface/ITinterface";
+import { FcLike } from "react-icons/fc";
 import { doc } from "firebase/firestore/lite";
 
 interface Blog {
@@ -24,26 +25,24 @@ const ITPost: React.FC = () => {
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Open modal for detailed blog view
   const openModal = (blog: Blog) => {
     setSelectedBlog(blog);
     setIsModalOpen(true);
   };
 
-  // Close modal
+
   const closeModal = () => {
     setSelectedBlog(null);
     setIsModalOpen(false);
   };
 
-  // Handle like functionality
+  
   const handleLike = async (id: string, likes: number, likedByMe: boolean) => {
-    const currentLikes = Number(likes) || 0; // Ensure likes is a valid number
     const updatedBlogs = blogs.map((blog) =>
       blog.id === id
         ? {
             ...blog,
-            likes: likedByMe ? Math.max(0, currentLikes - 1) : currentLikes + 1,
+            likes: likedByMe ? Math.max(0, likes -1) : likes + 1,
             likedByMe: !likedByMe,
           }
         : blog
@@ -53,14 +52,13 @@ const ITPost: React.FC = () => {
     try {
       const blogRef = doc(db, "blogs", id);
       await updateDoc(blogRef, {
-        likes: likedByMe ? Math.max(0, currentLikes - 1) : currentLikes + 1,
+        likes: likedByMe ? Math.max(0, likes - 1) : likes + 1,
       });
     } catch (error) {
       console.error("Error updating likes:", error);
     }
   };
 
-  // Fetch blogs on component mount
   useEffect(() => {
     const fetchITBlogs = async () => {
       setLoading(true);
@@ -76,19 +74,18 @@ const ITPost: React.FC = () => {
         const q = query(blogsCollection, where("category", "==", "IT & Tech"));
         const querySnapshot = await getDocs(q);
         clearTimeout(timeout);
-
         const ITBlogs: Blog[] = querySnapshot.docs.map((doc) => {
           const randomIndex = Math.floor(Math.random() * ItInterface.length);
           const data = doc.data();
           return {
             id: doc.id,
             ...data,
+            likes: Number(data.likes) || 0,
             createdAt: data.createdAt
               ? new Date(data.createdAt.seconds * 1000).toLocaleString()
               : "Unknown",
             image: ItInterface[randomIndex]?.img || "",
             likedByMe: false,
-            likes: data.likes || 0, // Ensure likes defaults to 0
           };
         }) as Blog[];
 
@@ -104,7 +101,7 @@ const ITPost: React.FC = () => {
     fetchITBlogs();
   }, []);
 
-  // Loading and error states
+  
   if (loading) {
     return (
       <div className="w-full h-[80vh] flex items-center justify-center">
@@ -130,53 +127,43 @@ const ITPost: React.FC = () => {
         {blogs.map((blog) => (
           <div
             key={blog.id}
-            className="p-4 border rounded shadow-lg flex flex-col items-center justify-center"
-          >
+            className="p-4 border rounded shadow-lg flex flex-col items-center justify-center">
             <img
               src={blog.image}
               className="w-full h-40 object-cover rounded mb-3"
-              alt={blog.title}
-            />
-            <h2
-              className="text-2xl font-semibold text-pink-600 overflow-hidden text-ellipsis"
+              alt={blog.title}/>
+            <h2 className="text-2xl font-semibold text-pink-600 overflow-hidden text-ellipsis"
               style={{
                 display: "-webkit-box",
                 WebkitBoxOrient: "vertical",
                 WebkitLineClamp: 1,
                 maxHeight: "4.5em",
-              }}
-            >
+              }}>
               {blog.title}
             </h2>
-            <p
-              className="text-gray-500 text-xs mt-2 overflow-hidden text-ellipsis"
+            <p className="text-gray-500 text-xs mt-2 overflow-hidden text-ellipsis"
               style={{
                 display: "-webkit-box",
                 WebkitBoxOrient: "vertical",
                 WebkitLineClamp: 3,
                 maxHeight: "4.5em",
-              }}
-            >
+              }}>
               {blog.text}
             </p>
             <button
               onClick={() => openModal(blog)}
-              className="bg-gray-300 text-black px-5 py-2 text-xs my-2 rounded hover:bg-gray-400"
-            >
+              className="bg-gray-300 text-black px-5 py-2 text-xs my-2 rounded hover:bg-gray-400">
               Show More
             </button>
           </div>
         ))}
       </div>
-
       {isModalOpen && selectedBlog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white overflow-y-auto rounded-lg p-6 w-11/12 sm:w-2/3 lg:w-1/2 shadow-lg relative">
             <button
               className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
-              onClick={closeModal}
-            >
-              ✖
+              onClick={closeModal}>✖
             </button>
             <h2 className="text-2xl font-bold text-pink-600 mb-4">
               {selectedBlog.title}
@@ -184,8 +171,7 @@ const ITPost: React.FC = () => {
             <img
               src={selectedBlog.image}
               alt={selectedBlog.title}
-              className="w-full h-48 object-cover rounded mb-4"
-            />
+              className="w-full h-48 object-cover rounded mb-4"/>
             <p className="text-gray-700 text-sm mb-4">{selectedBlog.text}</p>
             <p className="text-pink-600 text-xs mb-2">
               Created at: {selectedBlog.createdAt}
@@ -204,13 +190,8 @@ const ITPost: React.FC = () => {
                         selectedBlog.likedByMe
                       )
                     }
-                    className="cursor-pointer"
-                  >
-                    <IoIosHeartEmpty
-                      className={`text-3xl ${
-                        selectedBlog.likedByMe ? "text-red-600" : "text-pink-600"
-                      }`}
-                    />
+                    className="cursor-pointer">
+                     { selectedBlog.likedByMe ? <FcLike/> : <IoIosHeartEmpty/>}
                   </span>
                   <span className="text-sm text-gray-600">
                     {selectedBlog.likes} likes
@@ -219,8 +200,7 @@ const ITPost: React.FC = () => {
               </div>
               <button
                 onClick={closeModal}
-                className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
-              >
+                className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
                 Close
               </button>
             </div>
@@ -230,5 +210,4 @@ const ITPost: React.FC = () => {
     </div>
   );
 };
-
 export default ITPost;

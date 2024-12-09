@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
   return (
     <div className="w-full h-[80px] bg-gray-100 flex justify-between items-center shadow-md">
       <div className="mx-10">
-        <h1 className="text-pink-600 font-bold text-xl">BLOG Haven</h1>
+        <h1 className="text-pink-600 text-xl">BLOG Haven</h1>
       </div>
       <div className="hidden md:flex flex-row gap-10">
         <Link className="text-xs text-pink-600 hover:text-pink-800" to="/">
@@ -50,9 +50,9 @@ const Navbar: React.FC = () => {
       </div>
 {open && (
 <div className="md:hidden fixed top-0 left-0 w-[70%] h-full bg-pink-600 text-white flex flex-col items-start px-5 py-10 shadow-lg z-50">
-<h1 className="text-white font-bold text-xl py-5">BLOG Haven</h1>
+<h1 className="text-white text-xl py-5">BLOG Haven</h1>
 <div className="md:flex mx-10">
-      <Link to="/sn"><CgProfile className="absolute text-white top-2 right-5 font-bold text-3xl cursor-pointer" /></Link>
+      <Link onClick={toggleSideBar} to="/sn"><CgProfile className="absolute text-white top-2 right-5 font-bold text-3xl cursor-pointer" /></Link>
       </div>
           <Link
             className="text-sm py-2 hover:text-gray-200"

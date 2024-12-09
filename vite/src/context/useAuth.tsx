@@ -14,15 +14,16 @@ interface AuthContextType {
   setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
   toggleShowPassword: () => void;
   login: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  logMeOut:React.Dispatch<React.SetStateAction<boolean>>
+  logMeOut:() => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 interface AuthProviderProps {
   children: ReactNode;
+  setAuth: (isAuth: boolean) => void;
 }
 
-export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: FC<AuthProviderProps> = ({ children, setAuth }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -45,14 +46,26 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("User registered successfully!");
+      setAuth(true);
     } catch (error) {
       alert(`Error: ${(error as Error).message}`);
     }
   };
-const logMeOut=async()=>{
-  await signOut(auth);
-  localStorage.clear();
-}
+  const logMeOut = async () => {
+    try {
+      await signOut(auth);
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      localStorage.clear(); 
+      setAuth(false);
+
+    } catch (error) {
+      console.error("Error during logout:", error);
+      alert(`Error logging out: ${(error as Error).message}`);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{

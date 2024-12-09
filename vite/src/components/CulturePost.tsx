@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
 import { db } from "../config/Firebase";
 import { IoIosHeartEmpty } from "react-icons/io";
+import { FcLike } from "react-icons/fc";
+import { MdDelete } from "react-icons/md";
 import { imageInterface } from "../interface/CultureInterface";
+import { useDatabase } from "../context/useDatabase";
 
 interface Blog {
   author: string;
@@ -23,18 +26,18 @@ const CulturePost: React.FC = () => {
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+const  {deleteBlog}=useDatabase();
+
+
   const openModal = (blog: Blog) => {
     setSelectedBlog(blog);
     setIsModalOpen(true);
   };
-
   const closeModal = () => {
     setSelectedBlog(null);
     setIsModalOpen(false);
   };
-
   const handleLike = async (id: string, likes: number, likedByMe: boolean) => {
-    
     const updatedBlogs = blogs.map((blog) =>
       blog.id === id
         ? {
@@ -45,26 +48,23 @@ const CulturePost: React.FC = () => {
         : blog
     );
     setBlogs(updatedBlogs);
-
-    
     try {
       const blogRef = doc(db, "blogs", id);
-      await updateDoc(blogRef, { likes: likedByMe ? Math.max(0, likes - 1) : likes + 1 });
+      await updateDoc(blogRef, { 
+        likes: likedByMe ? Math.max(0, likes - 1) : likes + 1,
+      });
     } catch (error) {
       console.error("Error updating likes:", error);
     }
   };
-
   useEffect(() => {
     const fetchCultureBlogs = async () => {
       setLoading(true);
       setError(null);
-
       const timeout = setTimeout(() => {
         setError("Request timeout. Please try again later.");
         setLoading(false);
       }, 10000);
-
       try {
         const blogsCollection = collection(db, "blogs");
         const q = query(blogsCollection, where("category", "==", "Culture"));
@@ -94,7 +94,6 @@ const CulturePost: React.FC = () => {
     };
     fetchCultureBlogs();
   }, []);
-
   if (loading)
     return (
       <div className="w-full h-[80vh] flex items-center justify-center">
@@ -107,6 +106,7 @@ const CulturePost: React.FC = () => {
       <div className="w-full h-screen flex flex-col items-center justify-center">
         <h1 className="text-black text-6xl">Error 404!</h1>
         <p className="text-black text-xs">Site cannot be reached</p>
+        <p>{error}</p>
       </div>
     );
 
@@ -134,15 +134,6 @@ const CulturePost: React.FC = () => {
                 WebkitLineClamp: 3,
                 maxHeight: "4.5em",}}>
               {blog.text}</p>
-            <div className="flex items-center space-x-2 mt-2">
-              <span
-                onClick={() => handleLike(blog.id, blog.likes, blog.likedByMe)}
-                className="cursor-pointer">
-                <IoIosHeartEmpty className={`text-3xl ${
-                    blog.likedByMe ? "text-red-600" : "text-pink-600"}`}/>
-              </span>
-              <span className="text-sm text-gray-600">{blog.likes} likes</span>
-            </div>
             <button onClick={() => openModal(blog)}
               className="bg-gray-300 text-black px-5 py-2 text-xs my-2 rounded hover:bg-gray-400">
               Show More
@@ -179,12 +170,14 @@ const CulturePost: React.FC = () => {
                     )
                   }
                   className="cursor-pointer">
-                  <IoIosHeartEmpty
-                    className={`text-3xl ${
-                      selectedBlog.likedByMe ? "text-red-600" : "text-pink-600"}`}/>
+                 { selectedBlog.likedByMe ? <FcLike/> : <IoIosHeartEmpty/>}
                 </span>
                 <span className="text-sm text-gray-600">
                   {selectedBlog.likes} likes
+                </span>
+                <span>
+            
+                  <MdDelete onClick={() => deleteBlog(selectedBlog.id)} />
                 </span>
                 </div>
               </div>

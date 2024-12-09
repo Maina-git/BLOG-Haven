@@ -1,8 +1,22 @@
 import React from "react";
-import { FaEye, FaEyeSlash, FaBlog } from "react-icons/fa6";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { useAuth } from "../context/useAuth";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const Login: React.FC = () => {
+
+const [fadeAway, setFadeAway]=useState<Boolean>(false);
+
+
+  useEffect(()=>{
+    const timer=setTimeout(()=>{
+      setFadeAway(true)
+    }, 15000)
+    return ()=>clearTimeout(timer);
+  },[]);
+
+
   const {
     email,
     password,
@@ -15,16 +29,29 @@ const Login: React.FC = () => {
     login,
   } = useAuth();
 
+  if(!fadeAway)
+    return (
+  <div className="w-full h-screen bg-white flex flex-col gap-10 items-center justify-center">
+    <h1 className="text-pink-600 text-5xl">Generation Now</h1>
+    <img className="w-[400px]" src="/images/generationnow.jpg" alt="" />
+    <p className="text-pink-600 text-xl">BLOG Haven</p>
+    <span className="text-xs text-pink-600">Loading....</span>
+  </div>
+    )
+else 
   return (
-    <div className="w-full h-screen bg-pink-600 flex flex-col items-center justify-center">
-      <FaBlog className="text-white text-5xl my-10" />
-      <form onSubmit={login} className="p-5 bg-white flex flex-col rounded">
-        <h1 className="font-bold text-2xl text-center my-3 text-pink-600">
-          DOJO BLOG
+    <div   style={{
+      backgroundImage:"url('/images/generationnow.jpg')",
+      backgroundSize:"cover",
+      backgroundRepeat:"no-repeat",
+      backgroundPosition:"center"
+    }} className="w-full h-screen  flex flex-col items-center justify-center">
+      <form onSubmit={login} className="p-5 bg-white flex flex-col shadow-lg rounded">
+        <h1 className="text-2xl text-center my-3 text-pink-600">
+          BLOG Haven
         </h1>
-
         <div className="flex flex-col my-1">
-          <label htmlFor="" className="text-pink-600">Email:</label>
+          <label htmlFor="" className="text-pink-600  text-xs">Email:</label>
           <input
             value={email}
             type="email"
@@ -34,7 +61,7 @@ const Login: React.FC = () => {
           />
         </div>
         <div className="flex flex-col my-5">
-          <label htmlFor="" className="text-pink-600">Password:</label>
+          <label htmlFor="" className="text-pink-600 text-xs">Password:</label>
           <div className="p-2 w-[300px] border border-pink-600 rounded flex justify-between">
             <input
               value={password}
@@ -51,7 +78,7 @@ const Login: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-col my-5">
-          <label htmlFor="" className="text-pink-600">Confirm Password:</label>
+          <label htmlFor="" className="text-pink-600 text-xs">Confirm Password:</label>
           <div className="p-2 w-[300px] border border-pink-600 rounded flex justify-between">
             <input
               value={confirmPassword}
