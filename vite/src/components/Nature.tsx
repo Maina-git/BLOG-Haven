@@ -26,8 +26,8 @@ const Nature: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const { deleteBlog } = useDatabase();
-  const character=auth.currentUser?.email.charAt(0);
   
+  const character = auth.currentUser?.email?.charAt(0) || null;
 
   const openModal = (blog: Blog) => {
     setSelectedBlog(blog);

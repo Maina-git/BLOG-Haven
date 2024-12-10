@@ -26,7 +26,8 @@ const CulturePost: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const character=auth.currentUser?.email.charAt(0);
+  
+  const character=auth.currentUser?.email?.charAt(0) || null;
 
 const  {deleteBlog}=useDatabase();
 

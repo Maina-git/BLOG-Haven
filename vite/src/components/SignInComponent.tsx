@@ -20,7 +20,7 @@ useEffect(()=>{
 <p className="text-white  bg-green rounded p-5">Scroll to  sign Out</p>
 <span 
 className="w-[50px] h-[50px] bg-yellow-400 rounded-[100%] text-white  font-bold absolute top-20 left-10 flex items-center justify-center">
-  {auth.currentUser?.email.charAt(0)}
+  {auth.currentUser?.email?.charAt(0)}
 </span>
     <p className="text-blue-900">You are  Signed in as {auth.currentUser?.email}</p>
     <button onClick={logMeOut} className="px-5 py-2 my-10 bg-pink-600 rounded-[20px]  text-white">Sign Out</button>

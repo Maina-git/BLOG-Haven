@@ -1,6 +1,5 @@
-import React, { createContext, useContext } from "react";
-import { db } from "../config/Firebase";
-import { auth } from "../config/Firebase";
+import React, { createContext, useContext, ReactNode } from "react";
+import { db, auth } from "../config/Firebase";
 import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from "firebase/firestore";
 
 interface DatabaseContextProps {
@@ -9,9 +8,13 @@ interface DatabaseContextProps {
   deleteBlog: (blogId: string) => Promise<void>;
 }
 
+interface DatabaseProviderProps {
+  children: ReactNode;
+}
+
 const DatabaseContext = createContext<DatabaseContextProps | undefined>(undefined);
 
-export const DatabaseProvider: React.FC = ({ children }) => {
+export const DatabaseProvider: React.FC<DatabaseProviderProps> = ({ children }) => {
   const addBlog = async (author: string, title: string, text: string, category: string) => {
     try {
       const docRef = await addDoc(collection(db, "blogs"), {
@@ -20,7 +23,7 @@ export const DatabaseProvider: React.FC = ({ children }) => {
         text,
         category,
         createdAt: new Date(),
-        id:auth.currentUser?.email.charAt(0)
+        id: auth.currentUser?.email?.charAt(0),
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -30,10 +33,7 @@ export const DatabaseProvider: React.FC = ({ children }) => {
 
   const getBlogsByCategory = async (category: string) => {
     try {
-      const q = query(
-        collection(db, "blogs"),
-        where("category", "==", category)
-      );
+      const q = query(collection(db, "blogs"), where("category", "==", category));
       const querySnapshot = await getDocs(q);
       return querySnapshot.docs.map((doc) => ({
         id: doc.id,
