@@ -1,12 +1,11 @@
-
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs, updateDoc } from "firebase/firestore";
-import { db } from "../config/Firebase";
+import { collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
+import { db, auth } from "../config/Firebase";
 import { IoIosHeartEmpty } from "react-icons/io";
-import { growthInterface } from "../interface/GrowthInterface";
 import { FcLike } from "react-icons/fc";
-import { doc } from "firebase/firestore/lite";
 import { MdDelete } from "react-icons/md";
+import { growthInterface } from "../interface/GrowthInterface";
+import { useDatabase } from "../context/useDatabase";
 
 interface Blog {
   author: string;
@@ -26,6 +25,9 @@ const Nature: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
+  const { deleteBlog } = useDatabase();
+  const character=auth.currentUser?.email.charAt(0);
+  
 
   const openModal = (blog: Blog) => {
     setSelectedBlog(blog);
@@ -38,13 +40,11 @@ const Nature: React.FC = () => {
   };
 
   const handleLike = async (id: string, likes: number, likedByMe: boolean) => {
-    const currentLikes = Number(likes) || 0;
-
     const updatedBlogs = blogs.map((blog) =>
       blog.id === id
         ? {
             ...blog,
-            likes: likedByMe ? Math.max(0, currentLikes - 1) : currentLikes + 1,
+            likes: likedByMe ? Math.max(0, likes - 1) : likes + 1,
             likedByMe: !likedByMe,
           }
         : blog
@@ -54,10 +54,10 @@ const Nature: React.FC = () => {
     try {
       const blogRef = doc(db, "blogs", id);
       await updateDoc(blogRef, {
-        likes: likedByMe ? Math.max(0, currentLikes - 1) : currentLikes + 1,
+        likes: likedByMe ? Math.max(0, likes - 1) : likes + 1,
       });
-    } catch (error) {
-      console.log("Error updating likes", error);
+    } catch (err) {
+      console.error("Error updating likes:", err);
     }
   };
 
@@ -76,7 +76,7 @@ const Nature: React.FC = () => {
         const q = query(blogsCollection, where("category", "==", "Growth"));
         const querySnapshot = await getDocs(q);
         clearTimeout(timeout);
-        const cultureBlogs: Blog[] = querySnapshot.docs.map((doc) => {
+        const fetchedBlogs: Blog[] = querySnapshot.docs.map((doc) => {
           const randomIndex = Math.floor(Math.random() * growthInterface.length);
           const data = doc.data();
           return {
@@ -87,12 +87,12 @@ const Nature: React.FC = () => {
               ? new Date(data.createdAt.seconds * 1000).toLocaleString()
               : "Unknown",
             image: growthInterface[randomIndex].img,
-            likedByMe: false, 
+            likedByMe: false,
           };
         }) as Blog[];
-        setBlogs(cultureBlogs);
+        setBlogs(fetchedBlogs);
       } catch (err) {
-        console.error("Error fetching culture blogs:", err);
+        console.error("Error fetching blogs:", err);
         setError("Failed to fetch blogs.");
       } finally {
         setLoading(false);
@@ -102,31 +102,30 @@ const Nature: React.FC = () => {
     fetchGrowthBlogs();
   }, []);
 
-  if (loading)
+  if (loading) {
     return (
       <div className="w-full h-[80vh] flex items-center justify-center">
-        <div>
-          <h1 className="text-pink-600 font-bold text-4xl">Loading...</h1>
-        </div>
+        <h1 className="text-pink-600 font-bold text-4xl">Loading...</h1>
       </div>
     );
+  }
 
-  if (error)
+  if (error) {
     return (
       <div className="w-full h-screen flex flex-col items-center justify-center">
         <h1 className="text-black text-6xl">Error 404!</h1>
         <p className="text-black text-xs">Site cannot be reached</p>
+        <p>{error}</p>
       </div>
     );
+  }
 
   return (
     <div className="p-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {blogs.map((blog) => (
-          <div
-            key={blog.id}
-            className="p-4 border rounded shadow-lg flex flex-col items-center justify-center">
-            <img src={blog.image} alt={blog.title} />
+          <div key={blog.id} className="p-4 border rounded shadow-lg flex flex-col items-center justify-center">
+            <img src={blog.image} alt={blog.title} className="w-full h-40 object-cover rounded mb-3" />
             <h2
               className="text-2xl font-semibold text-pink-600 overflow-hidden text-ellipsis"
               style={{
@@ -134,10 +133,12 @@ const Nature: React.FC = () => {
                 WebkitBoxOrient: "vertical",
                 WebkitLineClamp: 1,
                 maxHeight: "4.5em",
-              }}>
+              }}
+            >
               {blog.title}
             </h2>
-            <p className="text-gray-500 text-xs mt-2 overflow-hidden text-ellipsis"
+            <p
+              className="text-gray-500 text-xs mt-2 overflow-hidden text-ellipsis"
               style={{
                 display: "-webkit-box",
                 WebkitBoxOrient: "vertical",
@@ -159,54 +160,37 @@ const Nature: React.FC = () => {
           <div className="bg-white overflow-y-auto rounded-lg p-6 w-11/12 sm:w-2/3 lg:w-1/2 shadow-lg relative">
             <button
               className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
-              onClick={closeModal}>
+              onClick={closeModal}
+            >
               ✖
             </button>
-            <h2 className="text-2xl font-bold text-pink-600 mb-4">
-              {selectedBlog.title}
-            </h2>
+            <h2 className="text-2xl font-bold text-pink-600 mb-4">{selectedBlog.title}</h2>
             <img
               src={selectedBlog.image}
               alt={selectedBlog.title}
-              className="w-full h-48 object-cover rounded mb-4"/>
+              className="w-full h-48 object-cover rounded mb-4"
+            />
             <p className="text-gray-700 text-sm mb-4">{selectedBlog.text}</p>
-            <p className="text-pink-600 text-xs mb-2">
-              Created at: {selectedBlog.createdAt}
-            </p>
+            <p className="text-pink-600 text-xs mb-2">Created at: {selectedBlog.createdAt}</p>
             <div className="flex justify-between mt-4">
               <div className="w-1/2 p-auto flex justify-between">
-                <span className="text-xs py-2 px-5 bg-pink-600 text-white rounded">
-                  {selectedBlog.author}
-                </span>
-                <div>
+                <span className="text-xs py-2 px-5 bg-pink-600 text-white rounded">{selectedBlog.author}</span>
+                <div className="flex flex-row gap-2">
                   <span
                     onClick={() =>
-                      handleLike(
-                        selectedBlog.id,
-                        selectedBlog.likes,
-                        selectedBlog.likedByMe
-                      )
+                      handleLike(selectedBlog.id, selectedBlog.likes, selectedBlog.likedByMe)
                     }
                     className="cursor-pointer">
-               {selectedBlog.likedByMe ? <FcLike/> : <IoIosHeartEmpty/>}
+                    {selectedBlog.likedByMe ? <FcLike /> : <IoIosHeartEmpty />}
                   </span>
-                  <span className="text-sm text-gray-600">
-                    {selectedBlog.likes} likes
-                  </span>
-
-
-
-
-
-                  <span>
-                    <MdDelete/>
-                  </span>
-
-
-
-
-
-                  
+                  <span className="text-sm text-gray-600">{selectedBlog.likes} likes</span>
+                  {character === selectedBlog.id && (
+                    <span>
+                      <MdDelete
+                        onClick={() => deleteBlog(selectedBlog.id)}
+                        className="cursor-pointer text-red-600"/>
+                    </span>
+                  )}
                 </div>
               </div>
               <button
@@ -221,4 +205,5 @@ const Nature: React.FC = () => {
     </div>
   );
 };
+
 export default Nature;

@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from "react";
 import { db } from "../config/Firebase";
+import { auth } from "../config/Firebase";
 import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from "firebase/firestore";
 
 interface DatabaseContextProps {
@@ -19,6 +20,7 @@ export const DatabaseProvider: React.FC = ({ children }) => {
         text,
         category,
         createdAt: new Date(),
+        id:auth.currentUser?.email.charAt(0)
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -48,6 +50,7 @@ export const DatabaseProvider: React.FC = ({ children }) => {
       const blogDoc = doc(db, "blogs", blogId);
       await deleteDoc(blogDoc);
       console.log("Document deleted with ID: ", blogId);
+      alert("Blog will be deleted Soon");
     } catch (e) {
       console.error("Error deleting document: ", e);
     }

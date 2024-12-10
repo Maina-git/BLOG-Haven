@@ -5,6 +5,9 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { ItInterface } from "../interface/ITinterface";
 import { FcLike } from "react-icons/fc";
 import { doc } from "firebase/firestore/lite";
+import { MdDelete } from "react-icons/md";
+import { useDatabase } from "../context/useDatabase";
+import { auth } from "../config/Firebase";
 
 interface Blog {
   author: string;
@@ -24,6 +27,8 @@ const ITPost: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+const {deleteBlog}=useDatabase()
+const character=auth.currentUser?.email.charAt(0);
 
   const openModal = (blog: Blog) => {
     setSelectedBlog(blog);
@@ -181,7 +186,7 @@ const ITPost: React.FC = () => {
                 <span className="text-xs py-2 px-5 bg-pink-600 text-white rounded">
                   {selectedBlog.author}
                 </span>
-                <div>
+                <div className="flex flex-row gap-2"  >
                   <span
                     onClick={() =>
                       handleLike(
@@ -196,6 +201,13 @@ const ITPost: React.FC = () => {
                   <span className="text-sm text-gray-600">
                     {selectedBlog.likes} likes
                   </span>
+                  {character === selectedBlog.id && (
+                    <span>
+                      <MdDelete
+                        onClick={() => deleteBlog(selectedBlog.id)}
+                        className="cursor-pointer text-red-600"/>
+                    </span>
+                  )} 
                 </div>
               </div>
               <button

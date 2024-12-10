@@ -5,18 +5,13 @@ import { useEffect } from 'react';
 
 const  SignInComponent:React.FC=()=> {
 
-
 useEffect(()=>{
-
    alert("Scroll down  to sign Out");
-
 }, []);
-
 
   const {
     logMeOut
   } = useAuth();
-
 
   return (
     <div className="w-full h-auto bg-white flex flex-col items-center justify-center py-10">
@@ -27,7 +22,6 @@ useEffect(()=>{
 className="w-[50px] h-[50px] bg-yellow-400 rounded-[100%] text-white  font-bold absolute top-20 left-10 flex items-center justify-center">
   {auth.currentUser?.email.charAt(0)}
 </span>
-
     <p className="text-blue-900">You are  Signed in as {auth.currentUser?.email}</p>
     <button onClick={logMeOut} className="px-5 py-2 my-10 bg-pink-600 rounded-[20px]  text-white">Sign Out</button>
       <h2 className="text-pink-600 text-2xl py-5">Genaration Now</h2>
@@ -45,5 +39,4 @@ className="w-[50px] h-[50px] bg-yellow-400 rounded-[100%] text-white  font-bold 
         </div> 
   )
 }
-
 export default SignInComponent;

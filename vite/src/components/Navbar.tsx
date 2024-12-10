@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdClose } from "react-icons/io";
 
+
 const Navbar: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
   const toggleSideBar = () => {
