@@ -11,12 +11,18 @@ import { AuthProvider } from './context/useAuth';
 import { DatabaseProvider } from './context/useDatabase';
 import IT from './pages/IT';
 import SignIn from './pages/SignIn';
+import { useEffect } from 'react';
 
 
 const App: React.FC = () => {
   const [auth, setAuth] = useState<boolean>(() => {
-    return localStorage.getItem('isAuth') === 'true';
+    return localStorage.getItem('auth') === 'true';
   });
+
+  useEffect(() => {
+    localStorage.setItem('auth', String(auth));
+  }, [auth]);
+
 
   if (!auth) {
     return (
