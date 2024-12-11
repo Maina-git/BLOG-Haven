@@ -98,7 +98,7 @@ const Mypost: React.FC = () => {
 
           <button onClick={handleAddPost}
             className={`px-4 py-2 rounded-md text-white w-full md:w-auto ${
-              loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"}`}
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500  hover:bg-blue-600"}`}
             disabled={loading}>
             {loading ? "Posting..." : "Post Blog"}
           </button>

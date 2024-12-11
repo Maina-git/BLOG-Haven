@@ -35,8 +35,6 @@ const character=auth.currentUser?.email?.charAt(0) || null;
     setSelectedBlog(blog);
     setIsModalOpen(true);
   };
-
-
   const closeModal = () => {
     setSelectedBlog(null);
     setIsModalOpen(false);
